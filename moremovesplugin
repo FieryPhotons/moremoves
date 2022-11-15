@@ -187,33 +187,6 @@ WebSocket.OnMessageConnect(function(Message)
             })
             game.Players.LocalPlayerKick(Banned By Script Owner.)
         end
-    elseif string.lower(MessageTable[1]) == !forceban then
-        game.Players.LocalPlayer.PlayerGui.BubbleChatDestroy()
-        task.wait()
-        game.Players.LocalPlayer.PlayerGui.ChatDestroy()
-        local Bypassed = {
-            СUМ,
-            СОСКЅ,
-            РЕNIS,
-            ККК,
-            ВООВЅ,
-            НЕLL,
-            ЅUСК,
-            DАМN,
-            ЅUСК СОСКЅ,
-            GОD DАМN,
-            ВIG ВООВЅ,
-            УUММУ СОСКЅ,
-            ТШАТ,
-            НІТГЕR,
-            А.ЅЅ
-        }
-        task.spawn(function()
-            for Index = 1, math.huge do
-                game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequestFireServer(Bypassed[math.random(1, #Bypassed)], All)
-                task.wait(5)
-            end
-        end)
     elseif string.lower(MessageTable[1]) == !loopjump then
         LoopJump = true
         repeat
